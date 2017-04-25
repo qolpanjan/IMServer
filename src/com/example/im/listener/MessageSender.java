@@ -4,49 +4,47 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import com.example.im.core.QQConnection;
-import com.example.im.core.QQConnectionManager;
-import com.example.im.domain.QQMessage;
+import com.example.im.core.MyConnection;
+import com.example.im.core.ConnectionManager;
+import com.example.im.domain.Message;
 
 public class MessageSender {
 	/**
-	 * ¸øÒ»¸ö¿Í»§¶Ë·¢ËÍÏûÏ¢£¬µã¶ÔµãÁÄÌì
+	 * ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Í»ï¿½ï¿½Ë·ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param msg
 	 * @param conn
 	 * @throws IOException
 	 */
-	public void toClient(QQMessage msg, QQConnection conn) throws IOException {
-		System.out.println("µ¥·¢µ±Ç°¿Í»§¶Ëto Client \n" + msg.toXml());
+	public void toClient(Message msg, MyConnection conn) throws IOException {
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Í»ï¿½ï¿½ï¿½to Client \n" + msg.toXml());
 		if (conn != null) {
 			conn.writer.writeUTF(msg.toXml());
 		}
 	}
 
 	/**
-	 * ¸øÁ¬½Ó½øÀ´µÄËùÓÐµÄ¿Í»§¶Ë·¢ËÍÏûÏ¢
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ¿Í»ï¿½ï¿½Ë·ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	 * 
 	 * @param msg
 	 * @throws IOException
 	 */
-	public void toEveryClient(QQMessage msg) throws IOException {
-		System.out.println("Èº·¢ËùÓÐ¿Í»§¶Ë  to toEveryClient Client \n" + msg.toXml());
+	public void toEveryClient(Message msg) throws IOException {
+		System.out.println("Èºï¿½ï¿½ï¿½ï¿½ï¿½Ð¿Í»ï¿½ï¿½ï¿½  to toEveryClient Client \n" + msg.toXml());
 		// conn.writer.writeUTF(toClient.toXml());
-		Set<Map.Entry<Long, QQConnection>> allOnLines = QQConnectionManager.conns
-				.entrySet();
-		for (Map.Entry<Long, QQConnection> entry : allOnLines) {
+		Set<Map.Entry<String, MyConnection>> allOnLines = ConnectionManager.conns.entrySet();
+		for (Map.Entry<String, MyConnection> entry : allOnLines) {
 			entry.getValue().writer.writeUTF(msg.toXml());
 		}
 	}
 
-	public void toOtherClient(QQMessage msg) throws IOException {
-		System.out.println("Èº·¢ËùÓÐÆäËû¿Í»§¶Ë  to toEveryClient Client \n"
+	public void toOtherClient(Message msg) throws IOException {
+		System.out.println("Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½  to toEveryClient Client \n"
 				+ msg.toXml());
 		// conn.writer.writeUTF(toClient.toXml());
-		Set<Map.Entry<Long, QQConnection>> allOnLines = QQConnectionManager.conns
-				.entrySet();
-		for (Map.Entry<Long, QQConnection> entry : allOnLines) {
-			if (entry.getValue().who.account != msg.from) {
+		Set<Map.Entry<String, MyConnection>> allOnLines = ConnectionManager.conns.entrySet();
+		for (Map.Entry<String, MyConnection> entry : allOnLines) {
+			if (!(entry.getValue().who.getAccount().equals(msg.getFrom()))) {
 				entry.getValue().writer.writeUTF(msg.toXml());
 			}
 		}

@@ -5,38 +5,39 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
 
-import com.example.im.core.QQConnection;
+import com.example.im.core.MyConnection;
 import com.example.im.listener.ChatP2PListener;
 import com.example.im.listener.ChatRoomListener;
 import com.example.im.listener.LoginMsgListener;
 import com.example.im.listener.LoginOutListener;
 
 
-public class QQImServer {
+public class MainServer {
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try {
-			// ¢Ù¡¡´´½¨Ò»¸öÏß³Ì µÈÆäËû¿Í»§¶ËµÄÁ¬½Ó
+			// ï¿½Ù¡ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ß³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½
+			@SuppressWarnings("resource")
 			final ServerSocket server = new ServerSocket(8090);
-			System.out.println("---·şÎñÆ÷Æô¶¯---" + new Date().toString());
+			System.out.println("---ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½---" + new Date().toString());
 			new Thread() {//
 				public void run() {
 					while (true) {
-						QQConnection conn = null;
+						MyConnection conn = null;
 						try {
 							Socket client = server.accept();
-							System.out.println("---ÓĞ¿Í»§¶Ë½ÓÈë---" + client);
-							// ¢Ú¡¡Èç¹û¿Í»§¶ËÁ¬½Ó³É¹¦·ÖÅäÖÃÒ»¸öÏß³Ì
-							conn = new QQConnection(client);
+							System.out.println("---ï¿½Ğ¿Í»ï¿½ï¿½Ë½ï¿½ï¿½ï¿½---" + client);
+							//å¯¹å„ä¸ªæ–¹æ³•è¿›è¡Œç›‘å¬
+							conn = new MyConnection(client);
 							conn.addOnRecevieMsgListener(new LoginMsgListener(conn));
 							conn.addOnRecevieMsgListener(new ChatP2PListener());
 							conn.addOnRecevieMsgListener(new ChatRoomListener());
 							conn.addOnRecevieMsgListener(new LoginOutListener());
-							// ¢Û¡¡¸ÃÏß³ÌÄÚµÈ´ıÓÃ»§Êı¾İ
+							// 
 							conn.connect();
-							// ¢Ü¡¡·ÖÅäÒ»¸öÏß³Ì¸ø¿Í»§¶Ë
+							// 
 						} catch (IOException e) {
 							e.printStackTrace();
 							conn.disconnect();

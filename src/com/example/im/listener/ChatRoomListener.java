@@ -2,14 +2,14 @@ package com.example.im.listener;
 
 import java.io.IOException;
 
-import com.example.im.core.QQConnection.OnRecevieMsgListener;
-import com.example.im.domain.QQMessage;
-import com.example.im.domain.QQMessageType;
+import com.example.im.core.MyConnection.OnRecevieMsgListener;
+import com.example.im.domain.Message;
+import com.example.im.domain.MessageType;
 
 
 public class ChatRoomListener extends MessageSender implements OnRecevieMsgListener {
-	public void onReceive(QQMessage fromOneClient) {
-		if (QQMessageType.MSG_TYPE_CHAT_ROOM.equals(fromOneClient.type)) {
+	public void onReceive(Message fromOneClient) {
+		if (MessageType.MSG_TYPE_CHAT_ROOM.equals(fromOneClient.getType())) {
 			try {
 				toOtherClient(fromOneClient);
 			} catch (IOException e) {

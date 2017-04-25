@@ -3,26 +3,25 @@ package com.example.im.core;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
-import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.im.domain.QQMessage;
-import com.example.im.domain.QQUser;
+import com.example.im.domain.Message;
+import com.example.im.domain.User;
 
 
-public class QQConnection extends Thread {
+public class MyConnection extends Thread {
 	private Socket scoket = null;
 	// readUTF
 	public DataOutputStream writer = null;
 	public DataInputStream reader = null;
-	public QQUser who = null;
+	public User who = null;
 
 	public String ip;
 	public int port;
 
-	public QQConnection(Socket scoket) {
+	public MyConnection(Socket scoket) {
 		super();
 		try {
 			this.scoket = scoket;
@@ -33,7 +32,7 @@ public class QQConnection extends Thread {
 		}
 	}
 
-	public QQConnection(String ip, int port) {
+	public MyConnection(String ip, int port) {
 		super();
 		this.ip = ip;
 		this.port = port;
@@ -50,7 +49,7 @@ public class QQConnection extends Thread {
 		}
 	}
 
-	// Á¬½Ó
+	// ï¿½ï¿½ï¿½ï¿½
 	public void connect() {
 		if (this.scoket == null) {
 			init(ip, port);
@@ -59,7 +58,7 @@ public class QQConnection extends Thread {
 		start();
 	}
 
-	// ¶Ï¿ªÁ¬½Ó
+	// ï¿½Ï¿ï¿½ï¿½ï¿½ï¿½ï¿½
 	public void disconnect() {
 		try {
 			flag = false;
@@ -71,21 +70,21 @@ public class QQConnection extends Thread {
 		}
 	}
 
-	// ----------¼àÌýÆ÷------
-	// 1.ÉêÃ÷¼àÌýÆ÷ÓëÏìÓ¦·½·¨
+	// ----------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½------
+	// 1.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½
 	public static interface OnRecevieMsgListener {
-		public void onReceive(QQMessage msg);
+		public void onReceive(Message msg);
 	}
 
-	// 2.Ö§³Ö¶à¸ö¼àÌýÆ÷
+	// 2.Ö§ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private List<OnRecevieMsgListener> listeners = new ArrayList<OnRecevieMsgListener>();
 
-	// 3.Ìí¼Ó¼àÌýÆ÷
+	// 3.ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½
 	public void addOnRecevieMsgListener(OnRecevieMsgListener listener) {
 		listeners.add(listener);
 	}
 
-	// 4.É¾³ý¼àÌýÆ÷
+	// 4.É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public void removeOnRecevieMsgListener(OnRecevieMsgListener listener) {
 		listeners.remove(listener);
 	}
@@ -95,14 +94,14 @@ public class QQConnection extends Thread {
 	@Override
 	public void run() {
 		super.run();
-		// µÈ´ý Êý¾Ý
+		// ï¿½È´ï¿½ ï¿½ï¿½ï¿½ï¿½
 		while (flag) {
 			try {
 				String xml = reader.readUTF();
 				System.out.println(xml);
 				if (xml != null && !"".equals(xml)) {
-					QQMessage msg = new QQMessage();
-					msg = (QQMessage) msg.fromXml(xml);
+					Message msg = new Message();
+					msg = (Message) msg.fromXml(xml);
 					for (OnRecevieMsgListener l : listeners) {
 						l.onReceive(msg);
 					}
@@ -111,13 +110,13 @@ public class QQConnection extends Thread {
 //				e.printStackTrace();
 				System.out.println("=-=EOFException---");
 				if (who != null) {
-					QQConnectionManager.remove(who.account);
+					ConnectionManager.remove(who.getAccount());
 				}
 				disconnect();
 			} catch (Exception e) {
 				e.printStackTrace();
 				if (who != null) {
-					QQConnectionManager.remove(who.account);
+					ConnectionManager.remove(who.getAccount());
 				}
 				disconnect();
 			}

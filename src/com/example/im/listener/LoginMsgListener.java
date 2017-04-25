@@ -1,52 +1,52 @@
 package com.example.im.listener;
 
-import com.example.im.core.QQConnection;
-import com.example.im.core.QQConnectionManager;
-import com.example.im.core.QQConnection.OnRecevieMsgListener;
+import com.example.im.core.MyConnection;
+import com.example.im.core.ConnectionManager;
+import com.example.im.core.MyConnection.OnRecevieMsgListener;
 import com.example.im.domain.Db;
-import com.example.im.domain.QQBuddyList;
-import com.example.im.domain.QQMessage;
-import com.example.im.domain.QQMessageType;
-import com.example.im.domain.QQUser;
+import com.example.im.domain.FriendList;
+import com.example.im.domain.Message;
+import com.example.im.domain.MessageType;
+import com.example.im.domain.User;
 
 
 public class LoginMsgListener extends MessageSender implements OnRecevieMsgListener {
-	private QQConnection conn = null;
+	private MyConnection conn = null;
 
-	public LoginMsgListener(QQConnection conn) {
+	public LoginMsgListener(MyConnection conn) {
 		super();
 		this.conn = conn;
 	}
 
-	public void onReceive(QQMessage fromCient) {
-		if (QQMessageType.MSG_TYPE_LOGIN.equals(fromCient.type)) {
+	public void onReceive(Message fromCient) {
+		if (MessageType.MSG_TYPE_LOGIN.equals(fromCient.getType())) {
 			try {
-				QQMessage toClient = new QQMessage();
-				if (QQMessageType.MSG_TYPE_LOGIN.equals(fromCient.type)) {
-					String[] params = fromCient.content.split("#");
+				Message toClient = new Message();
+				if (MessageType.MSG_TYPE_LOGIN.equals(fromCient.getType())) {
+					String[] params = fromCient.getContent().split("#");
 					String account = params[0];
 					String pwd = params[1];
-					QQUser user = Db.getByAccount(Long.parseLong(account));
+					User user = Db.getByAccount(account);
 					if (user == null) {
-						// ²»´æÔÚ
-						toClient.type = QQMessageType.MSG_TYPE_FAILURE;
-						toClient.content = "²»´æÔÚ";
+						// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+						toClient.setType(MessageType.MSG_TYPE_FAILURE);
+						toClient.setContent("ç™»å½•æˆåŠŸ");;
 						toClient(toClient, conn);
 					} else {
-						// ´æÔÚ
-						if (user.password.equals(pwd)) {
-							// µÇÂ¼ ³É¹¦
-							toClient.type = QQMessageType.MSG_TYPE_BUDDY_LIST;
-							// ·µ»ØÔÚÏßÃûµ¥
-							// ´´½¨´øÉí·İµÄÁ¬½Ó¶ÔÏó
+						// ï¿½ï¿½ï¿½ï¿½
+						if (user.getPassword().equals(pwd)) {
+							// ï¿½ï¿½Â¼ ï¿½É¹ï¿½
+							toClient.setType(MessageType.MSG_TYPE_BUDDY_LIST);
+							// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+							// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İµï¿½ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½
 							conn.who = user;
-							QQConnectionManager.put(user.account, conn);
-							QQBuddyList list = QQConnectionManager.list;
-							toClient.content = list.toJson();
+							ConnectionManager.put(user.getAccount(), conn);
+							FriendList list = ConnectionManager.list;
+							toClient.setContent(list.toJson());
 							toEveryClient(toClient);
 						} else {
-							toClient.type = QQMessageType.MSG_TYPE_FAILURE;
-							toClient.content = "Ê§°Ü";
+							toClient.setType(MessageType.MSG_TYPE_FAILURE); 
+							toClient.setContent("å¤±è´¥");
 							toClient(toClient, conn);
 						}
 					}

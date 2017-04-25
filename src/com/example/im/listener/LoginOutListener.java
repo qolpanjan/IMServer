@@ -1,24 +1,24 @@
 package com.example.im.listener;
 
-import com.example.im.core.QQConnection;
-import com.example.im.core.QQConnectionManager;
-import com.example.im.core.QQConnection.OnRecevieMsgListener;
-import com.example.im.domain.QQMessage;
-import com.example.im.domain.QQMessageType;
+import com.example.im.core.MyConnection;
+import com.example.im.core.ConnectionManager;
+import com.example.im.core.MyConnection.OnRecevieMsgListener;
+import com.example.im.domain.Message;
+import com.example.im.domain.MessageType;
 
 
 public class LoginOutListener extends MessageSender implements OnRecevieMsgListener {
 	public LoginOutListener() {
 		super();
 	}
-	public void onReceive(QQMessage fromCient) {
-		if (QQMessageType.MSG_TYPE_LOGIN_OUT.equals(fromCient.type)) {
+	public void onReceive(Message fromCient) {
+		if (MessageType.MSG_TYPE_LOGIN_OUT.equals(fromCient.getType())) {
 			try {
-				QQMessage toClient = new QQMessage();
-				toClient.type = QQMessageType.MSG_TYPE_SUCCESS;
-				toClient.content = "ÍË³ö³É¹¦";
-				QQConnection conn = QQConnectionManager.get(fromCient.from );
-				QQConnectionManager.remove(fromCient.from );
+				Message toClient = new Message();
+				toClient.setType(MessageType.MSG_TYPE_SUCCESS);
+				toClient.setContent("ä¸‹çº¿");
+				MyConnection conn = ConnectionManager.get(fromCient.getFrom() );
+				ConnectionManager.remove(fromCient.getFrom() );
 				toClient(toClient, conn);
 			} catch (Exception e) {
 				e.printStackTrace();
