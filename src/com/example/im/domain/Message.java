@@ -9,6 +9,8 @@ public class Message extends ProtocalObj {
     private String to = "0"; // 接收者 account
     private String content = ""; // 消息的内容 :约不?
     private String sendTime = Mytime.geTime(); // 发送时间
+    private String fromAvater ="";//发送者头像
+    
 
     public String getFromAvater() {
         return fromAvater;
@@ -18,7 +20,7 @@ public class Message extends ProtocalObj {
         this.fromAvater = fromAvater;
     }
 
-    private String fromAvater ="";//发送者头像
+    
 
     
     public Message(String type, String from, String to, String content, String sendTime, String fromAvater) {

@@ -3,17 +3,22 @@ package com.example.im.core;
 import java.util.HashMap;
 
 import com.example.im.domain.Db;
+import com.example.im.domain.FrienList;
 import com.example.im.domain.Friend;
-import com.example.im.domain.FriendList;
+import com.example.im.domain.OnlineFriendList;
 import com.example.im.domain.User;
 
 
 public class ConnectionManager {
 	public static HashMap<String, MyConnection> conns = new HashMap<String, MyConnection>();
-	public static FriendList list = new FriendList();
+	public static OnlineFriendList list = new OnlineFriendList();
+	public static FrienList frienList = new FrienList();
+	
+	
+	
 
 	public static void put(String account, MyConnection conn) {
-		System.out.println("====�˺�" + account + "������");
+		System.out.println("====账号" + account + "上线了");
 		remove(account);
 		conns.put(account, conn);
 		User u = Db.getByAccount(account);
@@ -26,7 +31,7 @@ public class ConnectionManager {
 
 	public static void remove(String account) {
 		if (conns.containsKey(account)) {
-//			System.out.println("====�˺�" + account + "������");
+			//System.out.println("====账号" + account + "下线了");
 			conns.remove(account);
 			Friend delete = null;
 			for (Friend item : list.buddyList) {
@@ -36,7 +41,7 @@ public class ConnectionManager {
 				}
 			}
 			if (delete != null) {
-//				System.out.println("====�������������Ƴ� 0000" + account);
+				System.out.println("====账号下线了" + account);
 				list.buddyList.remove(delete);
 
 			}

@@ -4,7 +4,7 @@ import com.example.im.core.MyConnection;
 import com.example.im.core.ConnectionManager;
 import com.example.im.core.MyConnection.OnRecevieMsgListener;
 import com.example.im.domain.Db;
-import com.example.im.domain.FriendList;
+import com.example.im.domain.FrienList;
 import com.example.im.domain.Message;
 import com.example.im.domain.MessageType;
 import com.example.im.domain.User;
@@ -28,22 +28,25 @@ public class LoginMsgListener extends MessageSender implements OnRecevieMsgListe
 					String pwd = params[1];
 					User user = Db.getByAccount(account);
 					if (user == null) {
-						// ������
+						// 如果账号不存在
 						toClient.setType(MessageType.MSG_TYPE_FAILURE);
-						toClient.setContent("登录成功");;
+						toClient.setContent("账号不存在");;
 						toClient(toClient, conn);
 					} else {
-						// ����
+						// 如果存在，先判断一下密码
 						if (user.getPassword().equals(pwd)) {
-							// ��¼ �ɹ�
+							// 如果密码正确
 							toClient.setType(MessageType.MSG_TYPE_BUDDY_LIST);
-							// ������������
-							// ��������ݵ����Ӷ���
+							
+							FrienList frienList = new FrienList();
+							frienList.friendList.addAll(Db.getFriendsList(account));
 							conn.who = user;
-							ConnectionManager.put(user.getAccount(), conn);
-							FriendList list = ConnectionManager.list;
-							toClient.setContent(list.toJson());
-							toEveryClient(toClient);
+							ConnectionManager.put(user.getAccount(), conn);  //添加到在线列表
+							//OnlineFriendList list = ConnectionManager.list;
+							
+							toClient.setContent(frienList.toJson());
+							//toEveryClient(toClient);
+							toClient(toClient,conn);
 						} else {
 							toClient.setType(MessageType.MSG_TYPE_FAILURE); 
 							toClient.setContent("失败");

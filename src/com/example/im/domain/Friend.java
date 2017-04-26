@@ -50,9 +50,7 @@ public class Friend extends ProtocalObj {
 	        return id;
 	    }
 
-	    public void setBelongTo(String belongTo) {
-	        this.id = Integer.getInteger(belongTo);
-	    }
+	   
 
 
 
