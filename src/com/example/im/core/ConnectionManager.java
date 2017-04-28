@@ -2,7 +2,6 @@ package com.example.im.core;
 
 import java.util.HashMap;
 
-import com.example.im.domain.Db;
 import com.example.im.domain.FrienList;
 import com.example.im.domain.Friend;
 import com.example.im.domain.OnlineFriendList;
@@ -17,11 +16,11 @@ public class ConnectionManager {
 	
 	
 
-	public static void put(String account, MyConnection conn) {
+	public static void put(User account, MyConnection conn) {
 		System.out.println("====账号" + account + "上线了");
-		remove(account);
-		conns.put(account, conn);
-		User u = Db.getByAccount(account);
+		remove(account.getAccount());
+		conns.put(account.getAccount(), conn);
+		User u = account;
 		Friend item = new Friend();
 		item.setAccount(u.getAccount());
 		item.setAvatar(u.getAvatar());

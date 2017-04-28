@@ -1,12 +1,13 @@
 package com.example.im.domain;
 
+
 import java.util.HashMap;
 import java.util.List;
 
 import com.example.db.DbHelper;
 
 public class Db {
-	public static HashMap<Long, User> map = new HashMap<Long, User>();
+	public static HashMap<String, User> map = new HashMap<String, User>();
 	
 //	static {
 //		for (int i = 0; i < 50; i++) {
@@ -26,6 +27,8 @@ public class Db {
 //			map.put(user.account, user);
 //		}
 //	}
+	
+	
 	
 	/**
 	 * 插入用户逻辑
@@ -71,18 +74,9 @@ public class Db {
 		DbHelper dbHelper = new DbHelper();
 		return dbHelper.updateUser(account);
 	}
-	/**
-	 * 获取在线用户
-	 * @param account
-	 * @return
-	 */
 
-	public static User getByAccount(String account) {
-		if (map.containsKey(account)) {
-			return map.get(account);
-		}
-		return null;
+		
 
-	}
+	
 
 }

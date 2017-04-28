@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.im.domain.Message;
+import com.example.im.domain.MessageBean;
 import com.example.im.domain.User;
 
 
@@ -83,7 +83,7 @@ public class MyConnection extends Thread {
 	// ----------添加监听器------
 	// 1.接受监听器接口
 	public static interface OnRecevieMsgListener {
-		public void onReceive(Message msg);
+		public void onReceive(MessageBean msg);
 	}
 
 	// 2.所有的监听器放在一个List里管理
@@ -110,9 +110,9 @@ public class MyConnection extends Thread {
 				String xml = reader.readUTF();
 				System.out.println("收到一个消息---------------------------\n"+xml);
 				if (xml != null && !"".equals(xml)) {
-					Message msg = new Message();
-					System.out.println(((Message)msg.fromXML(xml)).getContent());
-					msg = (Message) msg.fromXML(xml);
+					MessageBean msg = new MessageBean();
+					
+					msg = (MessageBean) msg.fromXML(xml);
 					for (OnRecevieMsgListener l : listeners) {
 						l.onReceive(msg);
 					}

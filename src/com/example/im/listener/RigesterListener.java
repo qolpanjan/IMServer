@@ -3,7 +3,7 @@ package com.example.im.listener;
 import com.example.im.core.MyConnection;
 import com.example.im.core.MyConnection.OnRecevieMsgListener;
 import com.example.im.domain.Db;
-import com.example.im.domain.Message;
+import com.example.im.domain.MessageBean;
 import com.example.im.domain.MessageType;
 import com.example.im.domain.User;
 
@@ -15,10 +15,10 @@ public class RigesterListener extends MessageSender implements OnRecevieMsgListe
 		this.conn = conn;
 	}
 
-	public void onReceive(Message fromCient) {
+	public void onReceive(MessageBean fromCient) {
 		if (MessageType.MSG_TYPE_REGISTER.equals(fromCient.getType())) {
 			try {
-				Message toClient = new Message();
+				MessageBean toClient = new MessageBean();
 				if (MessageType.MSG_TYPE_REGISTER.equals(fromCient.getType())) {
 					String[] params = fromCient.getContent().split("#");
 					String account = params[0];
@@ -26,7 +26,7 @@ public class RigesterListener extends MessageSender implements OnRecevieMsgListe
 					String nick = params[2];
 					String sex = params[3];
 					
-					User user = Db.getByAccount(account);
+					User user = Db.getAccount(account);
 					if (user == null) {
 						//用户不存在
 						User mUser = new User();

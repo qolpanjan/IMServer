@@ -3,7 +3,7 @@ package com.example.im.listener;
 import com.example.im.core.MyConnection;
 import com.example.im.core.MyConnection.OnRecevieMsgListener;
 import com.example.im.domain.Db;
-import com.example.im.domain.Message;
+import com.example.im.domain.MessageBean;
 import com.example.im.domain.MessageType;
 import com.example.im.domain.User;
 
@@ -15,10 +15,10 @@ public class ChangeUser extends MessageSender implements OnRecevieMsgListener {
 		this.conn = conn;
 	}
 
-	public void onReceive(Message fromCient) {
+	public void onReceive(MessageBean fromCient) {
 		if (MessageType.MSG_TYPE_CHANGE_USER.equals(fromCient.getType())) {
 			try {
-				Message toClient = new Message();
+				MessageBean toClient = new MessageBean();
 				if (MessageType.MSG_TYPE_CHANGE_USER.equals(fromCient.getType())) {
 					String[] params = fromCient.getContent().split("#");
 					//int id = Integer.valueOf(params[0]);
@@ -37,11 +37,17 @@ public class ChangeUser extends MessageSender implements OnRecevieMsgListener {
 						mUser.setSex(sex);
 						mUser.setAvatar(avater);
 						
-						Db.InsertAccount(mUser);
-						toClient.setType(MessageType.MSG_TYPE_SUCCESS);
-						toClient.setContent("修改成功");;
-						toClient(toClient, conn);
-				
+						boolean rs = Db.Update(mUser);
+						if(rs){
+							toClient.setType(MessageType.MSG_TYPE_SUCCESS);
+							toClient.setContent("修改成功");;
+							toClient(toClient, conn);
+						}{
+							toClient.setType(MessageType.MSG_TYPE_SUCCESS);
+							toClient.setContent("修改失败");;
+							toClient(toClient, conn);
+						}
+						
 				}
 
 			} catch (Exception e) {

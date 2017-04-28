@@ -2,6 +2,7 @@ package com.example.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,15 +11,20 @@ import java.util.List;
 
 import com.example.im.domain.Friend;
 import com.example.im.domain.User;
-import com.mysql.jdbc.PreparedStatement;
 
 public class DbHelper {
 	
 	String Driver = "com.mysql.jdbc.Driver";
-	String url = "jdbc:mysql://127.0.0.1:3306/missu";
+	String url = "jdbc:mysql://localhost:3306/missu";
 	String user ="root";
 	String password ="123456";
 	Connection conn = null;
+	
+	
+	public DbHelper() {
+		// TODO Auto-generated constructor stub
+		
+	}
 	
 	
 	/**
@@ -29,7 +35,8 @@ public class DbHelper {
 		
 		try{
 			Class.forName(Driver);
-			conn = DriverManager.getConnection(url, url, password);
+			conn = DriverManager.getConnection(url, user, password);
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -37,6 +44,12 @@ public class DbHelper {
 		return conn;
 	}
 	
+//	
+//	public static void main(String[] args) {
+//		DbHelper db = new DbHelper();
+//		User user = db.getUser("alim");
+//		System.out.println(user.getNick());
+//	}
 	/**
 	 * 插入新用户到数据库
 	 * @param user对象
@@ -59,8 +72,8 @@ public class DbHelper {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		boolean rs=insertFriend(user);
-		if (rs&&result) {
+		//boolean rs=insertFriend(user);
+		if (result) {
 			return result;
 		}else{
 			return false;
@@ -100,22 +113,27 @@ public class DbHelper {
 	
 	public User getUser(String account){
 		 String sql = "select * from account where account = '"+account+"'";    //要执行的SQL
-		 PreparedStatement pstmt;
+		 //System.out.println(sql);
+	
 		 User newUser = new User();
 		 try{
-			 pstmt = (PreparedStatement) getConn().prepareStatement(sql);
-			 ResultSet rs = pstmt.executeQuery();
-			 //int col = rs.getMetaData().getColumnCount();			   
-			 newUser.setId(rs.getInt("id"));
-			 newUser.setAccount(rs.getString("account"));
-			 newUser.setPassword(rs.getString("password"));
-			 newUser.setNick(rs.getString("nick"));
-			 newUser.setAvatar(rs.getString("avater"));
-			 newUser.setSex(rs.getString("sex"));
+			 Connection conn = getConn();
+			 Statement pstmt = conn.createStatement();
+			 ResultSet rs = pstmt.executeQuery(sql);
+			 //int col = rs.getMetaData().getColumnCount();	
+			 while(rs.next()){
+				  newUser.setId(rs.getInt("id"));
+				  newUser.setAccount(rs.getString("account"));
+				  newUser.setPassword(rs.getString("password"));
+				  newUser.setNick(rs.getString("nick"));
+				  newUser.setAvatar(rs.getString("avater"));
+				  newUser.setSex(rs.getString("sex"));
+			
+			 }
 			
 				  
 		 }catch(Exception e){
-			 
+			 System.out.println("getUSER ERROR");
 		 }   
           return newUser;
 	}
@@ -165,7 +183,7 @@ public class DbHelper {
 		}
 		
 		return list;
-	}
+		}
 		
 	}
 	

@@ -1,8 +1,9 @@
 package com.example.im.domain;
 
 import com.example.im.main.Mytime;
-
-public class Message extends ProtocalObj {
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+@XStreamAlias("Message")  
+public class MessageBean extends ProtocalObj {
 
     private String type = MessageType.MSG_TYPE_CHAT_P2P;// 类型的数据 chat login
     private String from = "0";// 发送者 account
@@ -23,7 +24,7 @@ public class Message extends ProtocalObj {
     
 
     
-    public Message(String type, String from, String to, String content, String sendTime, String fromAvater) {
+    public MessageBean(String type, String from, String to, String content, String sendTime, String fromAvater) {
         this.type = type;
         this.from = from;
         this.to = to;
@@ -78,7 +79,7 @@ public class Message extends ProtocalObj {
         return sendTime;
     }
 
-    public Message(){
+    public MessageBean(){
 
     }
 

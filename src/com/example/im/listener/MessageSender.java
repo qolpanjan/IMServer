@@ -6,31 +6,31 @@ import java.util.Set;
 
 import com.example.im.core.MyConnection;
 import com.example.im.core.ConnectionManager;
-import com.example.im.domain.Message;
+import com.example.im.domain.MessageBean;
 
 public class MessageSender {
 	/**
-	 * ��һ���ͻ��˷�����Ϣ����Ե�����
+	 * 发送给单个用户
 	 * 
 	 * @param msg
 	 * @param conn
 	 * @throws IOException
 	 */
-	public void toClient(Message msg, MyConnection conn) throws IOException {
-		System.out.println("������ǰ�ͻ���to Client \n" + msg.toXml());
+	public void toClient(MessageBean msg, MyConnection conn) throws IOException {
+		System.out.println("向客户发送消息：\n" + msg.toXml());
 		if (conn != null) {
 			conn.writer.writeUTF(msg.toXml());
 		}
 	}
 
 	/**
-	 * �����ӽ��������еĿͻ��˷�����Ϣ
+	 * 发送给所有用户
 	 * 
 	 * @param msg
 	 * @throws IOException
 	 */
-	public void toEveryClient(Message msg) throws IOException {
-		System.out.println("Ⱥ�����пͻ���  to toEveryClient Client \n" + msg.toXml());
+	public void toEveryClient(MessageBean msg) throws IOException {
+		System.out.println(" to toEveryClient Client \n" + msg.toXml());
 		// conn.writer.writeUTF(toClient.toXml());
 		Set<Map.Entry<String, MyConnection>> allOnLines = ConnectionManager.conns.entrySet();
 		for (Map.Entry<String, MyConnection> entry : allOnLines) {
@@ -38,8 +38,8 @@ public class MessageSender {
 		}
 	}
 
-	public void toOtherClient(Message msg) throws IOException {
-		System.out.println("Ⱥ�����������ͻ���  to toEveryClient Client \n"
+	public void toOtherClient(MessageBean msg) throws IOException {
+		System.out.println(" to toEveryClient Client \n"
 				+ msg.toXml());
 		// conn.writer.writeUTF(toClient.toXml());
 		Set<Map.Entry<String, MyConnection>> allOnLines = ConnectionManager.conns.entrySet();
