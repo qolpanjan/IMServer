@@ -11,7 +11,6 @@ import com.example.im.domain.User;
 public class ConnectionManager {
 	public static HashMap<String, MyConnection> conns = new HashMap<String, MyConnection>();
 	public static OnlineFriendList list = new OnlineFriendList();
-	public static FrienList frienList = new FrienList();
 	
 	
 	

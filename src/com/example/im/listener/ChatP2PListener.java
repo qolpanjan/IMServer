@@ -15,7 +15,6 @@ public class ChatP2PListener extends MessageSender implements OnRecevieMsgListen
 			MyConnection anotherOne = ConnectionManager.get(fromOneClient.getTo());
 			try {
 				toClient(fromOneClient, anotherOne);
-				System.out.println("发送给另一个客户端");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
